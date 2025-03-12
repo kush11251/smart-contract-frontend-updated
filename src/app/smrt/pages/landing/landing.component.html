@@ -1,0 +1,131 @@
+<form
+  [formGroup]="userForm"
+  (ngSubmit)="onSubmit()"
+  class="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg space-y-4 md:max-w-2xl"
+>
+  <h2 class="text-2xl font-bold text-center mb-4">User Loan Contract</h2>
+
+  <!-- First Name -->
+  <div>
+    <label class="block font-medium">First Name</label>
+    <input
+      type="text"
+      formControlName="firstName"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched" class="text-red-500 text-sm">First name is required.</p>
+  </div>
+
+  <!-- Middle Name -->
+  <div>
+    <label class="block font-medium">Middle Name</label>
+    <input
+      type="text"
+      formControlName="middleName"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+
+  <!-- Last Name -->
+  <div>
+    <label class="block font-medium">Last Name</label>
+    <input
+      type="text"
+      formControlName="lastName"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched" class="text-red-500 text-sm">Last name is required.</p>
+  </div>
+
+  <!-- Date of Birth -->
+  <div>
+    <label class="block font-medium">Date of Birth</label>
+    <input
+      type="date"
+      formControlName="dob"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['dob'].invalid && userForm.controls['dob'].touched" class="text-red-500 text-sm">Date of birth is required.</p>
+  </div>
+
+  <!-- PAN -->
+  <div>
+    <label class="block font-medium">PAN</label>
+    <input
+      type="text"
+      formControlName="pan"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['pan'].invalid && userForm.controls['pan'].touched" class="text-red-500 text-sm">Enter a valid PAN (ABCDE1234F).</p>
+  </div>
+
+  <!-- Gender -->
+  <div>
+    <label class="block font-medium">Gender</label>
+    <div class="flex space-x-4">
+      <label class="inline-flex items-center">
+        <input type="radio" formControlName="gender" value="Male" />
+        <span class="ml-2">Male</span>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="radio" formControlName="gender" value="Female" />
+        <span class="ml-2">Female</span>
+      </label>
+    </div>
+    <p *ngIf="userForm.controls['gender'].invalid && userForm.controls['gender'].touched" class="text-red-500 text-sm">Gender is required.</p>
+  </div>
+
+  <!-- Pincode -->
+  <div>
+    <label class="block font-medium">Pincode</label>
+    <input
+      type="text"
+      formControlName="pincode"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['pincode'].invalid && userForm.controls['pincode'].touched" class="text-red-500 text-sm">Enter a valid 6-digit Pincode.</p>
+  </div>
+
+  <!-- Loan Type -->
+  <div>
+    <label class="block font-medium">Loan Type</label>
+    <select
+      formControlName="loanType"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    >
+      <option value="">Select Loan Type</option>
+      <option value="Home Loan">Home Loan</option>
+      <option value="Personal Loan">Personal Loan</option>
+      <option value="Small Business Loan">Small Business Loan</option>
+      <option value="Loan Against Property">Loan Against Property</option>
+    </select>
+    <p *ngIf="userForm.controls['loanType'].invalid && userForm.controls['loanType'].touched" class="text-red-500 text-sm">Loan type is required.</p>
+  </div>
+
+  <!-- Consent -->
+  <div>
+    <label class="inline-flex items-center">
+      <input type="checkbox" formControlName="consent" />
+      <span class="ml-2">I agree to the terms and conditions</span>
+    </label>
+    <p *ngIf="userForm.controls['consent'].invalid && userForm.controls['consent'].touched" class="text-red-500 text-sm">You must agree to the terms.</p>
+  </div>
+
+  <!-- Consent -->
+  <div>
+    <label class="inline-flex items-center">
+      <input type="checkbox" formControlName="consent2" />
+      <span class="ml-2">Generate Contact and Store in Secure Storage</span>
+    </label>
+    <p *ngIf="userForm.controls['consent2'].invalid && userForm.controls['consent2'].touched" class="text-red-500 text-sm">You must agree to the terms.</p>
+  </div>
+
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    [disabled]="userForm.invalid"
+    class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"
+  >
+    Submit
+  </button>
+</form>
