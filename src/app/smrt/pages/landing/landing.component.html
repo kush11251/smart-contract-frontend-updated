@@ -37,6 +37,17 @@
     <p *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched" class="text-red-500 text-sm">Last name is required.</p>
   </div>
 
+  <!-- Email -->
+  <div>
+    <label class="block font-medium">Email</label>
+    <input
+      type="email"
+      formControlName="email"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['email'].invalid && userForm.controls['email'].touched" class="text-red-500 text-sm">Enter a valid email address.</p>
+  </div>
+
   <!-- Date of Birth -->
   <div>
     <label class="block font-medium">Date of Birth</label>
@@ -102,6 +113,30 @@
     <p *ngIf="userForm.controls['loanType'].invalid && userForm.controls['loanType'].touched" class="text-red-500 text-sm">Loan type is required.</p>
   </div>
 
+  <!-- Loan Amount -->
+  <div>
+    <label class="block font-medium">Loan Amount</label>
+    <input
+      type="number"
+      formControlName="loanAmount"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    />
+    <p *ngIf="userForm.controls['loanAmount'].invalid && userForm.controls['loanAmount'].touched" class="text-red-500 text-sm">Enter a valid loan amount.</p>
+  </div>
+
+  <!-- Loan Tenure -->
+  <div>
+    <label class="block font-medium">Loan Tenure (Years)</label>
+    <select
+      formControlName="loanTenure"
+      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
+    >
+      <option value="">Select Tenure</option>
+      <option *ngFor="let year of [5, 10, 15, 20, 25, 30]" [value]="year">{{ year }} Years</option>
+    </select>
+    <p *ngIf="userForm.controls['loanTenure'].invalid && userForm.controls['loanTenure'].touched" class="text-red-500 text-sm">Select a loan tenure.</p>
+  </div>
+
   <!-- Consent -->
   <div>
     <label class="inline-flex items-center">
@@ -123,9 +158,9 @@
   <!-- Submit Button -->
   <button
     type="submit"
-    [disabled]="userForm.invalid"
+    [disabled]="userForm.invalid || isLoading"
     class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"
   >
-    Submit
+  {{ isLoading ? buttonText : 'Submit' }}
   </button>
 </form>

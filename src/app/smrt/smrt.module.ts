@@ -5,6 +5,7 @@ import { SmrtRoutingModule } from './smrt-routing.module';
 import { LandingComponent } from './pages/landing/landing.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog'
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SmrtRoutingModule,
 
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ]
 })
 export class SmrtModule { }
