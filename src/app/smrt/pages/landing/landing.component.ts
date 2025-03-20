@@ -42,6 +42,8 @@ export class LandingComponent implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem('txKey')) {
+      console.log(localStorage.getItem('txKey'))
+
       this.apiService
         .getDigiData(localStorage.getItem('txKey')?.toString)
         .subscribe((res) => {
