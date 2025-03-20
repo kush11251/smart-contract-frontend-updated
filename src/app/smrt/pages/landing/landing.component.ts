@@ -44,8 +44,10 @@ export class LandingComponent implements OnInit {
     if (localStorage.getItem('txKey')) {
       console.log(localStorage.getItem('txKey'))
 
+      let key = localStorage.getItem('txKey')
+
       this.apiService
-        .getDigiData(localStorage.getItem('txKey')?.toString)
+        .getDigiData(key)
         .subscribe((res) => {
           console.log(res);
         });
