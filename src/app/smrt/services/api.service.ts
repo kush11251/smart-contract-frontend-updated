@@ -35,5 +35,9 @@ export class ApiService {
     return this.http.get(this.baseUrl + 'digilocker-session')
   }
 
+  getDigiData(txKey: any) {
+    return this.http.post(this.baseUrl + 'digilocker-data' + '/' + txKey, {})
+  }
+
   uploadFileToPinata() {}
 }

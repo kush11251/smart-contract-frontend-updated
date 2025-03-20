@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit {
   userForm: FormGroup;
   isLoading = false;
   buttonText: string = '';
@@ -40,6 +40,16 @@ export class LandingComponent {
     });
   }
 
+  ngOnInit(): void {
+    if (localStorage.getItem('txKey')) {
+      this.apiService
+        .getDigiData(localStorage.getItem('txKey')?.toString)
+        .subscribe((res) => {
+          console.log(res);
+        });
+    }
+  }
+
   calculateEMI(loanAmount: number, loanTenure: number, roi: number): number {
     const monthlyRate = roi / 12 / 100;
     const tenureMonths = loanTenure * 12;
@@ -52,6 +62,8 @@ export class LandingComponent {
   dummySubmit() {
     this.apiService.getDigiUrl().subscribe((res: any) => {
       console.log(res);
+
+      localStorage.setItem('txKey', res.data.decentroTxnId);
 
       window.open(res.data.authorizationUrl, '_blank');
     });
