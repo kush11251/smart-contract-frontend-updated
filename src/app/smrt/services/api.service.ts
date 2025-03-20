@@ -31,5 +31,9 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'sendEmail', data)
   }
 
+  getDigiUrl() {
+    return this.http.get(this.baseUrl + 'digilocker-session')
+  }
+
   uploadFileToPinata() {}
 }

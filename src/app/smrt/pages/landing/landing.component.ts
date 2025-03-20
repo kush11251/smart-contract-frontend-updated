@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
@@ -11,12 +12,13 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 export class LandingComponent {
   userForm: FormGroup;
   isLoading = false;
-  buttonText:string = ""
+  buttonText: string = '';
 
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -47,11 +49,19 @@ export class LandingComponent {
     );
   }
 
+  dummySubmit() {
+    this.apiService.getDigiUrl().subscribe((res: any) => {
+      console.log(res);
+
+      window.open(res.data.authorizationUrl, '_blank');
+    });
+  }
+
   onSubmit() {
     if (this.userForm.valid) {
-      this.isLoading = true
+      this.isLoading = true;
 
-      this.buttonText = "Loading..."
+      this.buttonText = 'Loading...';
 
       console.log('Form Submitted:', this.userForm.value);
 
@@ -87,7 +97,7 @@ export class LandingComponent {
           loanTenure: loanTenure.toString(),
           roi: roi.toString(),
           emiAmount: emiAmount,
-          consentFlag: true
+          consentFlag: true,
         };
 
         this.apiService.generateContract(req).subscribe((res: any) => {
@@ -95,34 +105,39 @@ export class LandingComponent {
 
           // prompt(res.toString())
 
-          if(res?.status == "2001") {
-            this.buttonText = "Uploading File..."
+          if (res?.status == '2001') {
+            this.buttonText = 'Uploading File...';
 
-            this.apiService.getFileData(res?.transactionId).subscribe((file_res: any) => {
-              console.log(file_res);
+            this.apiService
+              .getFileData(res?.transactionId)
+              .subscribe((file_res: any) => {
+                console.log(file_res);
 
-              if(file_res?.status == "2001") {
-                this.buttonText = "Sending Mail..."
+                if (file_res?.status == '2001') {
+                  this.buttonText = 'Sending Mail...';
 
-                let mailReq = {
-                  email: this.userForm.get('email')?.value,
-                  link: "https://gateway.pinata.cloud/ipfs/" + file_res?.fileHash,
-                  name: this.userForm.get('firstName')?.value
+                  let mailReq = {
+                    email: this.userForm.get('email')?.value,
+                    link:
+                      'https://gateway.pinata.cloud/ipfs/' + file_res?.fileHash,
+                    name: this.userForm.get('firstName')?.value,
+                  };
+
+                  this.apiService
+                    .sendMail(mailReq)
+                    .subscribe((email_res: any) => {
+                      if (email_res?.status == '2001') {
+                        this.isLoading = false;
+
+                        this.openDialog();
+                      } else {
+                        this.openErrorDialog;
+                      }
+                    });
+                } else {
+                  this.openErrorDialog();
                 }
-
-                this.apiService.sendMail(mailReq).subscribe((email_res: any) => {
-                  if(email_res?.status == "2001") {
-                    this.isLoading = false
-
-                    this.openDialog()
-                  } else {
-                    this.openErrorDialog
-                  }
-                })
-              } else {
-                this.openErrorDialog();
-              }
-            })
+              });
           } else {
             this.openErrorDialog();
           }
@@ -188,9 +203,7 @@ export class DialogContent {
   template: `
     <div class="p-6 bg-white rounded-lg shadow-lg text-center">
       <h2 class="text-xl font-semibold text-gray-800 mb-2">Error Occured</h2>
-      <p class="text-gray-600 mb-4">
-        We are working on it. Try Again Later
-      </p>
+      <p class="text-gray-600 mb-4">We are working on it. Try Again Later</p>
       <button
         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
         (click)="onClose()"
