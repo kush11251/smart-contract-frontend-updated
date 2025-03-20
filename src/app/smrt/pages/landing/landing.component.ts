@@ -63,7 +63,7 @@ export class LandingComponent implements OnInit {
     this.apiService.getDigiUrl().subscribe((res: any) => {
       console.log(res);
 
-      localStorage.setItem('txKey', res.data.decentroTxnId);
+      localStorage.setItem('txKey', res.decentroTxnId);
 
       window.open(res.data.authorizationUrl, '_blank');
     });
