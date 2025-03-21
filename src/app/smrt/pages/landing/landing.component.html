@@ -1,268 +1,194 @@
 <form
   [formGroup]="userForm"
   (ngSubmit)="onSubmit()"
-  class="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg space-y-4 md:max-w-2xl"
+  class="max-w-3xl mx-auto p-8 bg-white shadow-2xl rounded-2xl space-y-6"
 >
-  <h2 class="text-2xl font-bold text-center mb-4">User Loan Contract</h2>
+  <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">User Loan Contract</h2>
 
-  <!-- First Name -->
-  <div>
-    <label class="block font-medium">First Name</label>
-    <input
-      type="text"
-      formControlName="firstName"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['firstName'].invalid &&
-        userForm.controls['firstName'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      First name is required.
-    </p>
+  <!-- Personal Info -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">First Name</label>
+      <input type="text" formControlName="firstName"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['firstName'].invalid && userForm.controls['firstName'].touched"
+        class="text-red-500 text-xs mt-1">
+        First name is required.
+      </p>
+    </div>
+
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Middle Name</label>
+      <input type="text" formControlName="middleName"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Last Name</label>
+      <input type="text" formControlName="lastName"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['lastName'].invalid && userForm.controls['lastName'].touched"
+        class="text-red-500 text-xs mt-1">
+        Last name is required.
+      </p>
+    </div>
   </div>
 
-  <!-- Middle Name -->
-  <div>
-    <label class="block font-medium">Middle Name</label>
-    <input
-      type="text"
-      formControlName="middleName"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
+  <!-- Contact & Identity -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Email</label>
+      <input type="email" formControlName="email"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['email'].invalid && userForm.controls['email'].touched"
+        class="text-red-500 text-xs mt-1">
+        Enter a valid email address.
+      </p>
+    </div>
+
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Date of Birth</label>
+      <input type="date" formControlName="dob"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['dob'].invalid && userForm.controls['dob'].touched"
+        class="text-red-500 text-xs mt-1">
+        Date of birth is required.
+      </p>
+    </div>
   </div>
 
-  <!-- Last Name -->
-  <div>
-    <label class="block font-medium">Last Name</label>
-    <input
-      type="text"
-      formControlName="lastName"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['lastName'].invalid &&
-        userForm.controls['lastName'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Last name is required.
-    </p>
-  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">PAN</label>
+      <input type="text" formControlName="pan" maxlength="10"
+        (input)="onPanInput($event)"
+        class="mt-1 w-full px-4 py-2 border rounded-lg uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['pan'].invalid && userForm.controls['pan'].touched"
+        class="text-red-500 text-xs mt-1">
+        Enter a valid PAN (ABCDE1234F).
+      </p>
+    </div>
 
-  <!-- Email -->
-  <div>
-    <label class="block font-medium">Email</label>
-    <input
-      type="email"
-      formControlName="email"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['email'].invalid && userForm.controls['email'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Enter a valid email address.
-    </p>
-  </div>
-
-  <!-- Date of Birth -->
-  <div>
-    <label class="block font-medium">Date of Birth</label>
-    <input
-      type="date"
-      formControlName="dob"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['dob'].invalid && userForm.controls['dob'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Date of birth is required.
-    </p>
-  </div>
-
-  <!-- PAN -->
-  <div>
-    <label class="block font-medium">PAN</label>
-    <input
-      type="text"
-      formControlName="pan"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['pan'].invalid && userForm.controls['pan'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Enter a valid PAN (ABCDE1234F).
-    </p>
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Pincode</label>
+      <input type="text" formControlName="pincode" maxlength="6"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['pincode'].invalid && userForm.controls['pincode'].touched"
+        class="text-red-500 text-xs mt-1">
+        Enter a valid 6-digit Pincode.
+      </p>
+    </div>
   </div>
 
   <!-- Gender -->
   <div>
-    <label class="block font-medium">Gender</label>
-    <div class="flex space-x-4">
-      <label class="inline-flex items-center">
+    <label class="block font-semibold text-sm text-gray-700">Gender</label>
+    <div class="flex items-center gap-6 mt-2">
+      <label class="inline-flex items-center gap-2">
         <input type="radio" formControlName="gender" value="Male" />
-        <span class="ml-2">Male</span>
+        <span>Male</span>
       </label>
-      <label class="inline-flex items-center">
+      <label class="inline-flex items-center gap-2">
         <input type="radio" formControlName="gender" value="Female" />
-        <span class="ml-2">Female</span>
+        <span>Female</span>
       </label>
     </div>
-    <p
-      *ngIf="
-        userForm.controls['gender'].invalid &&
-        userForm.controls['gender'].touched
-      "
-      class="text-red-500 text-sm"
-    >
+    <p *ngIf="userForm.controls['gender'].invalid && userForm.controls['gender'].touched"
+      class="text-red-500 text-xs mt-1">
       Gender is required.
     </p>
   </div>
 
-  <!-- Pincode -->
-  <div>
-    <label class="block font-medium">Pincode</label>
-    <input
-      type="text"
-      formControlName="pincode"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['pincode'].invalid &&
-        userForm.controls['pincode'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Enter a valid 6-digit Pincode.
-    </p>
+  <!-- Loan Info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Loan Type</label>
+      <select formControlName="loanType"
+        class="mt-1 w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Select Loan Type</option>
+        <option value="Home Loan">Home Loan</option>
+        <option value="Personal Loan">Personal Loan</option>
+        <option value="Small Business Loan">Small Business Loan</option>
+        <option value="Loan Against Property">Loan Against Property</option>
+      </select>
+      <p *ngIf="userForm.controls['loanType'].invalid && userForm.controls['loanType'].touched"
+        class="text-red-500 text-xs mt-1">
+        Loan type is required.
+      </p>
+    </div>
+
+    <div>
+      <label class="block font-semibold text-sm text-gray-700">Loan Amount</label>
+      <input type="number" formControlName="loanAmount" maxlength="10"
+        class="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <p *ngIf="userForm.controls['loanAmount'].invalid && userForm.controls['loanAmount'].touched"
+        class="text-red-500 text-xs mt-1">
+        Enter a valid loan amount.
+      </p>
+    </div>
   </div>
 
-  <!-- Loan Type -->
   <div>
-    <label class="block font-medium">Loan Type</label>
-    <select
-      formControlName="loanType"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    >
-      <option value="">Select Loan Type</option>
-      <option value="Home Loan">Home Loan</option>
-      <option value="Personal Loan">Personal Loan</option>
-      <option value="Small Business Loan">Small Business Loan</option>
-      <option value="Loan Against Property">Loan Against Property</option>
-    </select>
-    <p
-      *ngIf="
-        userForm.controls['loanType'].invalid &&
-        userForm.controls['loanType'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Loan type is required.
-    </p>
-  </div>
-
-  <!-- Loan Amount -->
-  <div>
-    <label class="block font-medium">Loan Amount</label>
-    <input
-      type="number"
-      formControlName="loanAmount"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    />
-    <p
-      *ngIf="
-        userForm.controls['loanAmount'].invalid &&
-        userForm.controls['loanAmount'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      Enter a valid loan amount.
-    </p>
-  </div>
-
-  <!-- Loan Tenure -->
-  <div>
-    <label class="block font-medium">Loan Tenure (Years)</label>
-    <select
-      formControlName="loanTenure"
-      class="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-400"
-    >
+    <label class="block font-semibold text-sm text-gray-700">Loan Tenure (Years)</label>
+    <select formControlName="loanTenure"
+      class="mt-1 w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
       <option value="">Select Tenure</option>
-      <option *ngFor="let year of [5, 10, 15, 20, 25, 30]" [value]="year">
-        {{ year }} Years
-      </option>
+      <option *ngFor="let year of [5, 10, 15, 20, 25, 30]" [value]="year">{{ year }} Years</option>
     </select>
-    <p
-      *ngIf="
-        userForm.controls['loanTenure'].invalid &&
-        userForm.controls['loanTenure'].touched
-      "
-      class="text-red-500 text-sm"
-    >
+    <p *ngIf="userForm.controls['loanTenure'].invalid && userForm.controls['loanTenure'].touched"
+      class="text-red-500 text-xs mt-1">
       Select a loan tenure.
     </p>
   </div>
 
-  <!-- Consent -->
-  <div>
-    <label class="inline-flex items-center">
-      <input type="checkbox" formControlName="consent" />
-      <span class="ml-2">I agree to the terms and conditions</span>
-    </label>
-    <p
-      *ngIf="
-        userForm.controls['consent'].invalid &&
-        userForm.controls['consent'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      You must agree to the terms.
-    </p>
+  <!-- Consent Checkboxes -->
+  <div class="space-y-2">
+    <div>
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="consent" class="mr-2" />
+        <span>I agree to the terms and conditions</span>
+      </label>
+      <p *ngIf="userForm.controls['consent'].invalid && userForm.controls['consent'].touched"
+        class="text-red-500 text-xs mt-1">
+        You must agree to the terms.
+      </p>
+    </div>
+  
+    <div class="mt-4">
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="consent2" class="mr-2" />
+        <span>Generate Contact and Store in Secure Storage</span>
+      </label>
+      <p *ngIf="userForm.controls['consent2'].invalid && userForm.controls['consent2'].touched"
+        class="text-red-500 text-xs mt-1">
+        You must agree to the terms.
+      </p>
+    </div>
   </div>
-
-  <!-- Consent -->
-  <div>
-    <label class="inline-flex items-center">
-      <input type="checkbox" formControlName="consent2" />
-      <span class="ml-2">Generate Contact and Store in Secure Storage</span>
-    </label>
-    <p
-      *ngIf="
-        userForm.controls['consent2'].invalid &&
-        userForm.controls['consent2'].touched
-      "
-      class="text-red-500 text-sm"
-    >
-      You must agree to the terms.
-    </p>
-  </div>
+  
 
   <!-- Submit Button -->
   <button
     type="submit"
     [disabled]="userForm.invalid || isLoading"
-    class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"
+    class="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
   >
     {{ isLoading ? buttonText : "Submit" }}
   </button>
-
-  <!-- <button
-    class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"
-    (click)="dummySubmit()"
-  >
-    Submit
-  </button> -->
 </form>
+
+
+<!-- Loader Dialog -->
+<div
+  *ngIf="showLoaderDialog"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-xl p-8 w-80 shadow-xl text-center space-y-4">
+    <div class="animate-spin h-8 w-8 mx-auto border-4 border-blue-500 border-t-transparent rounded-full"></div>
+
+    <div>
+      <p class="font-semibold text-gray-700">{{ loaderMessage }}</p>
+      <p class="text-lg font-mono tracking-widest">{{ loaderDots }}</p>
+    </div>
+  </div>
+</div>

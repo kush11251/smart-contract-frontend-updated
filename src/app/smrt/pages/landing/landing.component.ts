@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
@@ -14,11 +14,29 @@ export class LandingComponent implements OnInit {
   isLoading = false;
   buttonText: string = '';
 
+  showLoaderDialog = false;
+  loaderMessage = '';
+  loaderDots = '';
+  private dotInterval: any;
+
+  data1 = [
+    'Storing Data',
+    'Retrieving Credit Report',
+    'Initialising KYC'
+  ]
+
+  data2 = [
+    'Retriving KYC Data',
+    'Generating Contract',
+    'Uploading File',
+  ]
+
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -41,6 +59,24 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const hasParams = Object.keys(params).length > 0;
+
+      if (hasParams) {
+        this.showSequentialLoader(this.data2)
+
+        this.getLocalaData()
+      } else {
+        console.log('No extra params in URL.');
+
+        this.userForm.reset()
+
+        localStorage.clear()
+      }
+    });
+  }
+
+  getLocalaData() {
     if (localStorage.getItem('txKey') && localStorage.getItem('trnKey') && localStorage.getItem('email')) {
       console.log(localStorage.getItem('txKey'));
       console.log(localStorage.getItem('trnKey'));
@@ -80,6 +116,12 @@ export class LandingComponent implements OnInit {
     }
   }
 
+  onPanInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.toUpperCase();
+    this.userForm.controls['pan'].setValue(value, { emitEvent: false });
+  }
+
   calculateEMI(loanAmount: number, loanTenure: number, roi: number): number {
     const monthlyRate = roi / 12 / 100;
     const tenureMonths = loanTenure * 12;
@@ -102,6 +144,10 @@ export class LandingComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
+      this.showSequentialLoader(this.data1)
+
+      new Promise(resolve => setTimeout(resolve, 15000));
+
       this.isLoading = true;
 
       this.buttonText = 'Loading...';
@@ -222,6 +268,44 @@ export class LandingComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.userForm.reset(); // Ensure this method exists in your form
     });
+  }
+
+  showSequentialLoader(data: any) {
+    this.showLoaderDialog = true;
+    this.runStep(data[0], () => {
+      this.runStep(data[1], () => {
+        this.runStep(data[2], () => {
+          // Final step or you can close dialog here
+          setTimeout(() => {
+            this.showLoaderDialog = false;
+          }, 2000);
+        });
+      });
+    });
+  }
+
+  private runStep(message: string, next: () => void) {
+    this.loaderMessage = message;
+    this.loaderDots = '';
+    this.startDotAnimation();
+
+    setTimeout(() => {
+      this.stopDotAnimation();
+      next();
+    }, 2000);
+  }
+
+  private startDotAnimation() {
+    let count = 0;
+    this.dotInterval = setInterval(() => {
+      count = (count + 1) % 4;
+      this.loaderDots = '.'.repeat(count);
+    }, 500);
+  }
+
+  private stopDotAnimation() {
+    clearInterval(this.dotInterval);
+    this.loaderDots = '';
   }
 }
 
