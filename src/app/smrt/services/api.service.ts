@@ -39,5 +39,13 @@ export class ApiService {
     return this.http.post(this.baseUrl + 'digilocker-data' + '/' + txKey, {})
   }
 
+  updateAadharData(tnKey:any, txKey: any) {
+    return this.http.post(this.baseUrl + 'add-aadhar' + '/' + tnKey + '/' + txKey, {})
+  }
+
+  getFullData(tnKey: any) {
+    return this.http.get(this.baseUrl + 'get-data' + '/' + tnKey)
+  }
+
   uploadFileToPinata() {}
 }

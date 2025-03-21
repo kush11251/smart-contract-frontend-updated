@@ -41,16 +41,42 @@ export class LandingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('txKey')) {
-      console.log(localStorage.getItem('txKey'))
+    if (localStorage.getItem('txKey') && localStorage.getItem('trnKey') && localStorage.getItem('email')) {
+      console.log(localStorage.getItem('txKey'));
+      console.log(localStorage.getItem('trnKey'));
+      console.log(localStorage.getItem('email'))
 
-      let key = localStorage.getItem('txKey')
+      let key = localStorage.getItem('txKey');
+      let x = localStorage.getItem('trnKey');
+      let email = localStorage.getItem('email')
 
-      this.apiService
-        .getDigiData(key)
-        .subscribe((res) => {
-          console.log(res);
+      this.apiService.getDigiData(key).subscribe((res) => {
+        console.log(res);
+      });
+
+      this.apiService.getFullData(x).subscribe((res: any) => {
+        console.log(res);
+
+        let mailReq = {
+          email: email,
+          link: 'https://gateway.pinata.cloud/ipfs/' + res?.fileHash,
+          name: "There",
+        };
+
+        this.apiService.sendMail(mailReq).subscribe((email_res: any) => {
+          if (email_res?.status == '2001') {
+            this.isLoading = false;
+
+            this.openDialog();
+          } else {
+            this.openErrorDialog;
+          }
         });
+      });
+
+      this.apiService.updateAadharData(x, key).subscribe((res) => {
+        console.log(res);
+      });
     }
   }
 
@@ -69,7 +95,8 @@ export class LandingComponent implements OnInit {
 
       localStorage.setItem('txKey', res.decentroTxnId);
 
-      window.open(res.data.authorizationUrl, '_blank');
+      // window.open(res.data.authorizationUrl, '_blank');
+      window.location.href = res.data.authorizationUrl;
     });
   }
 
@@ -119,44 +146,51 @@ export class LandingComponent implements OnInit {
         this.apiService.generateContract(req).subscribe((res: any) => {
           console.log(res);
 
+          localStorage.setItem('txKey', res.decentroTxnId);
+          localStorage.setItem('trnKey', res.transactionId);
+          localStorage.setItem('email', this.userForm.get('email')?.value);
+
+          // window.open(res.data.authorizationUrl, '_blank');
+          window.location.href = res.url;
+
           // prompt(res.toString())
 
-          if (res?.status == '2001') {
-            this.buttonText = 'Uploading File...';
+          // if (res?.status == '2001') {
+          //   this.buttonText = 'Uploading File...';
 
-            this.apiService
-              .getFileData(res?.transactionId)
-              .subscribe((file_res: any) => {
-                console.log(file_res);
+          //   this.apiService
+          //     .getFileData(res?.transactionId)
+          //     .subscribe((file_res: any) => {
+          //       console.log(file_res);
 
-                if (file_res?.status == '2001') {
-                  this.buttonText = 'Sending Mail...';
+          //       if (file_res?.status == '2001') {
+          //         this.buttonText = 'Sending Mail...';
 
-                  let mailReq = {
-                    email: this.userForm.get('email')?.value,
-                    link:
-                      'https://gateway.pinata.cloud/ipfs/' + file_res?.fileHash,
-                    name: this.userForm.get('firstName')?.value,
-                  };
+          //         let mailReq = {
+          //           email: this.userForm.get('email')?.value,
+          //           link:
+          //             'https://gateway.pinata.cloud/ipfs/' + file_res?.fileHash,
+          //           name: this.userForm.get('firstName')?.value,
+          //         };
 
-                  this.apiService
-                    .sendMail(mailReq)
-                    .subscribe((email_res: any) => {
-                      if (email_res?.status == '2001') {
-                        this.isLoading = false;
+          //         this.apiService
+          //           .sendMail(mailReq)
+          //           .subscribe((email_res: any) => {
+          //             if (email_res?.status == '2001') {
+          //               this.isLoading = false;
 
-                        this.openDialog();
-                      } else {
-                        this.openErrorDialog;
-                      }
-                    });
-                } else {
-                  this.openErrorDialog();
-                }
-              });
-          } else {
-            this.openErrorDialog();
-          }
+          //               this.openDialog();
+          //             } else {
+          //               this.openErrorDialog;
+          //             }
+          //           });
+          //       } else {
+          //         this.openErrorDialog();
+          //       }
+          //     });
+          // } else {
+          //   this.openErrorDialog();
+          // }
         });
       } else {
         // this.apiService.uploadFileToPinata()
@@ -173,6 +207,8 @@ export class LandingComponent implements OnInit {
   }
 
   openDialog() {
+    localStorage.clear()
+
     const dialogRef = this.dialog.open(DialogContent);
 
     dialogRef.afterClosed().subscribe(() => {
